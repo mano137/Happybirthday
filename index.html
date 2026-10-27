@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Happy Birthday✨ A Special Celebration</title>
+  
+  <!-- Google Fonts for luxury romantic serif and clean modern sans -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400;1,600&family=Montserrat:wght@300;400;500;600;700&family=Sacramento&display=swap" rel="stylesheet">
+  
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <!-- Fixed Background Photo Layer -->
+  <div class="fixed-bg-photo" id="bgPhotoLayer">
+    <div class="bg-photo-img" id="bgPhotoImg" style="background-image: url('assets/heart_pose_bg.png');"></div>
+    <div class="bg-photo-overlay" id="bgPhotoOverlay"></div>
+  </div>
+
+  <!-- Canvas for ambient starry sky, bokeh lights and fireworks -->
+  <canvas id="stars-canvas"></canvas>
+  <canvas id="fireworks-canvas"></canvas>
+
+  <!-- Audio Player Pill -->
+  <div class="audio-control-pill" id="musicToggleBtn" title="Play / Pause Birthday Music">
+    <div class="music-wave" id="musicWave">
+      <span></span><span></span><span></span><span></span>
+    </div>
+    <span class="music-label">Birthday Melody</span>
+    <button class="music-btn" aria-label="Toggle background music">
+      <svg class="icon-play" viewBox="0 0 24 24"><polygon points="6,3 20,12 6,21"></polygon></svg>
+      <svg class="icon-pause" viewBox="0 0 24 24"><rect x="5" y="4" width="4" height="16"></rect><rect x="15" y="4" width="4" height="16"></rect></svg>
+    </button>
+  </div>
+
+  <!-- Top Action Bar (Customize, Share) -->
+  <header class="top-nav">
+    <div class="brand-badge">✨ Special Day</div>
+    <div class="nav-actions">
+      <button class="glass-pill-btn" id="bgStyleToggleBtn" onclick="toggleBackgroundMode()" title="Toggle Fullscreen Photo vs Framed Card">
+        <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" fill="none" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><polyline points="21 15 16 10 5 21"></polyline></svg>
+        <span id="bgModeText">Card View</span>
+      </button>
+      <button class="glass-pill-btn" id="customizeBtn" title="Edit text, photo or music">
+        <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" fill="none" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
+        <span>Personalize</span>
+      </button>
+    </div>
+  </header>
+
+  <!-- Main Slides / Story Presentation Container -->
+  <main class="story-wrapper" id="storyWrapper">
+
+    <!-- ==================== SCENE 1: THE COSMIC INTRO (MATCHES SCREENSHOT) ==================== -->
+    <section class="story-slide active" id="slide-1">
+      <div class="slide-content card-scene">
+        
+        <!-- Glowing framed photo with 3D tilt & sparkles -->
+        <div class="glowing-frame-wrapper" id="photoFrame">
+          <div class="frame-ambient-glow"></div>
+          <div class="frame-sparkle sp-top-left" aria-hidden="true">✦</div>
+          <div class="frame-sparkle sp-bottom-right" aria-hidden="true">✦</div>
+          <div class="frame-inner">
+            <img src="assets/portrait_person.png" alt="Birthday Person" id="userPhoto" onerror="this.src='assets/portrait_striped.jpg'">
+            <div class="frame-shimmer"></div>
+            <div class="frame-reflection" id="cardReflection"></div>
+          </div>
+        </div>
+
+        <!-- Poetic quote from user screenshot -->
+        <div class="poetic-text-block">
+          <p class="quote-text" id="quoteText">
+            &ldquo;Tonight isn't ordinary.<br>
+            The stars are glowing softer,<br>
+            the moon feels warmer,<br>
+            and the universe is quietly celebrating<br>
+            someone truly special. ✨&rdquo;
+          </p>
+        </div>
+
+        <!-- Scroll indicator / Next Button -->
+        <div class="scroll-prompt" onclick="nextSlide()">
+          <span class="scroll-text">Scroll or Tap to explore</span>
+          <div class="scroll-chevron">
+            <svg viewBox="0 0 24 24"><path d="M7 10l5 5 5-5" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round"></path></svg>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ==================== SCENE 2: WHY YOU ARE CELEBRATED ==================== -->
+    <section class="story-slide" id="slide-2">
+      <div class="slide-content text-scene">
+        <span class="scene-tag">A Moment of Appreciation</span>
+        <h2 class="scene-title">To Someone Extraordinary</h2>
+        <p class="scene-subtitle">Tap each card below to reveal your special birthday blessings ✨</p>
+
+        <div class="cards-grid">
+          <!-- Card 1 -->
+          <div class="glass-card reveal-card" onclick="toggleRevealCard(this)">
+            <div class="card-header">
+              <span class="card-icon">🌟</span>
+              <div class="card-title-group">
+                <h3>Your Bright Light</h3>
+                <span class="card-mini-hint">Tap to read message</span>
+              </div>
+              <button class="tap-hint" type="button" aria-label="Toggle message">
+                <span class="hint-text">Tap to reveal</span>
+                <span class="hint-icon">▾</span>
+              </button>
+            </div>
+            <div class="card-content-wrapper">
+              <div class="card-content-inner">
+                <div class="card-divider"></div>
+                <p>Your smile brings warmth to every single room. Never forget how much light, kindness, and positive energy you give to everyone around you. Keep shining! ✨</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Card 2 -->
+          <div class="glass-card reveal-card" onclick="toggleRevealCard(this)">
+            <div class="card-header">
+              <span class="card-icon">🎯</span>
+              <div class="card-title-group">
+                <h3>Your Endless Strength</h3>
+                <span class="card-mini-hint">Tap to read message</span>
+              </div>
+              <button class="tap-hint" type="button" aria-label="Toggle message">
+                <span class="hint-text">Tap to reveal</span>
+                <span class="hint-icon">▾</span>
+              </button>
+            </div>
+            <div class="card-content-wrapper">
+              <div class="card-content-inner">
+                <div class="card-divider"></div>
+                <p>May this year reward every single ounce of your hard work, dedication, and patience with monumental achievements and boundless success! 🏆</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Card 3 -->
+          <div class="glass-card reveal-card" onclick="toggleRevealCard(this)">
+            <div class="card-header">
+              <span class="card-icon">💫</span>
+              <div class="card-title-group">
+                <h3>Endless Possibilities</h3>
+                <span class="card-mini-hint">Tap to read message</span>
+              </div>
+              <button class="tap-hint" type="button" aria-label="Toggle message">
+                <span class="hint-text">Tap to reveal</span>
+                <span class="hint-icon">▾</span>
+              </button>
+            </div>
+            <div class="card-content-wrapper">
+              <div class="card-content-inner">
+                <div class="card-divider"></div>
+                <p>New adventures, bold dreams, and unforgettable memories are waiting for you in this new chapter🥰. May every door you knock on open wide! 🚀</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="slide-nav-buttons">
+          <button class="nav-btn prev-btn" onclick="prevSlide()">Back</button>
+          <button class="nav-btn next-btn" onclick="nextSlide()">Make a Wish 🎂</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== SCENE 3: INTERACTIVE CAKE & CANDLE ==================== -->
+    <section class="story-slide" id="slide-3">
+      <div class="slide-content cake-scene">
+        <span class="scene-tag">Make A Birthday Wish</span>
+        <h2 class="scene-title">Blow Out The Candles</h2>
+        <p class="scene-subtitle">Make your heartfelt wish in your mind, then tap the candles or button below to blow them out!</p>
+
+        <!-- Interactive 3D CSS Cake -->
+        <div class="cake-stage" id="cakeStage" onclick="blowCandles()">
+          <div class="cake-container">
+            
+            <!-- Candles on top -->
+            <div class="candles-row">
+              <div class="candle c-1">
+                <div class="flame" id="flame1"></div>
+                <div class="smoke" id="smoke1"></div>
+                <div class="wick"></div>
+                <div class="candle-stick"></div>
+              </div>
+              <div class="candle c-2">
+                <div class="flame" id="flame2"></div>
+                <div class="smoke" id="smoke2"></div>
+                <div class="wick"></div>
+                <div class="candle-stick"></div>
+              </div>
+              <div class="candle c-3">
+                <div class="flame" id="flame3"></div>
+                <div class="smoke" id="smoke3"></div>
+                <div class="wick"></div>
+                <div class="candle-stick"></div>
+              </div>
+            </div>
+
+            <!-- Cake Tier Top -->
+            <div class="cake-tier tier-top">
+              <div class="frosting-drops">
+                <span></span><span></span><span></span><span></span><span></span>
+              </div>
+            </div>
+
+            <!-- Cake Tier Bottom -->
+            <div class="cake-tier tier-bottom">
+              <div class="frosting-ribbon"></div>
+            </div>
+
+            <!-- Plate -->
+            <div class="cake-plate"></div>
+          </div>
+        </div>
+
+        <!-- Wish Message & Blow Button -->
+        <div class="cake-controls">
+          <button class="glow-action-btn" id="blowBtn" onclick="blowCandles()">
+            <span class="btn-icon">💨</span>
+            <span class="btn-text">Blow Out The Candles</span>
+          </button>
+          <div class="wish-reveal-message" id="wishReveal">
+            🎉 <strong>WISH GRANTED!</strong> May all your biggest dreams come true this year🎉
+          </div>
+        </div>
+
+        <div class="slide-nav-buttons">
+          <button class="nav-btn prev-btn" onclick="prevSlide()">Back</button>
+          <button class="nav-btn next-btn" onclick="nextSlide()">Open Gift Box 🎁</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== SCENE 4: INTERACTIVE GIFT BOX & LETTER ==================== -->
+    <section class="story-slide" id="slide-4">
+      <div class="slide-content gift-scene">
+        <span class="scene-tag">A Special Surprise</span>
+        <h2 class="scene-title">A Gift For You</h2>
+        <p class="scene-subtitle">Tap the gift box to unwrap your special birthday letter</p>
+
+        <!-- Interactive Gift Box -->
+        <div class="gift-box-wrapper" id="giftBox" onclick="openGift()">
+          <div class="gift-box">
+            <div class="gift-lid">
+              <div class="gift-bow">
+                <div class="bow-left"></div>
+                <div class="bow-right"></div>
+                <div class="bow-center"></div>
+              </div>
+              <div class="ribbon-horizontal"></div>
+            </div>
+            <div class="gift-body">
+              <div class="ribbon-vertical"></div>
+            </div>
+          </div>
+          <span class="gift-hint" id="giftHint">Tap to Unwrap🎀</span>
+        </div>
+
+        <!-- Letter revealed upon opening -->
+        <div class="letter-container" id="letterContainer">
+          <div class="parchment-letter">
+            <div class="letter-header">
+              <span class="letter-badge">Dear Birthday Actor Ramana Rishi💚,</span>
+              <span class="letter-date">Today & Always</span>
+            </div>
+            <div class="letter-body" id="letterBody">
+              <p>On this beautiful day, take a quiet moment to look back at how far you've come and smile at the incredible person you are.</p>
+              <p>You have a spirit that touches lives, a passion that inspires, and a heart of pure gold. May the coming year bring you unmatched joy, vibrant health, thriving success, and peace in every step you take.</p>
+              <p class="letter-closing">Keep shining bright🌟 and never stop dreaming big🎉</p>
+            </div>
+            <div class="letter-signature">
+              <span>With warmest wishes & love,</span>
+              <strong id="signatureName">Manopriya 😍 </strong>
+            </div>
+          </div>
+        </div>
+
+        <div class="slide-nav-buttons">
+          <button class="nav-btn prev-btn" onclick="prevSlide()">Back</button>
+          <button class="nav-btn next-btn" onclick="nextSlide()">Grand Finale 🎆</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== SCENE 5: GRAND CELEBRATION FINALE ==================== -->
+    <section class="story-slide" id="slide-5">
+      <div class="slide-content finale-scene">
+        
+        <div class="finale-crown">👑</div>
+        <h1 class="grand-birthday-title">HAPPY BIRTHDAY Rishi💚</h1>
+        <h3 class="grand-birthday-name" id="finaleName">To Someone Truly Special ✨</h3>
+
+        <p class="finale-desc">
+          Tap anywhere on screen to launch celebratory fireworks! May your day be as radiant and magical as you are.
+        </p>
+
+        <div class="finale-actions">
+          <button class="glow-action-btn finale-btn" onclick="triggerFireworksBlast()">
+            <span>🎆 Launch Fireworks</span>
+          </button>
+          <button class="glass-pill-btn finale-btn" onclick="triggerConfettiBurst()">
+            <span>🎊 Shower Confetti</span>
+          </button>
+          <button class="glass-pill-btn finale-btn" onclick="goToSlide(0)">
+            <span>🔄 Replay From Start</span>
+          </button>
+        </div>
+
+        <!-- Elegant celebratory hint -->
+        <div class="finale-tip">
+          <span>✨ Tap anywhere on screen to celebrate with colorful fireworks!</span>
+        </div>
+
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Progress dots on the right -->
+  <nav class="slide-indicators" id="slideIndicators">
+    <button class="indicator-dot active" onclick="goToSlide(0)" aria-label="Intro Slide"></button>
+    <button class="indicator-dot" onclick="goToSlide(1)" aria-label="Wishes Slide"></button>
+    <button class="indicator-dot" onclick="goToSlide(2)" aria-label="Cake Slide"></button>
+    <button class="indicator-dot" onclick="goToSlide(3)" aria-label="Gift Slide"></button>
+    <button class="indicator-dot" onclick="goToSlide(4)" aria-label="Finale Slide"></button>
+  </nav>
+
+  <!-- Confetti Canvas -->
+  <canvas id="confetti-canvas"></canvas>
+
+  <!-- ==================== CUSTOMIZE / EDIT MODAL ==================== -->
+  <div class="modal-backdrop" id="customModal">
+    <div class="modal-box glass-panel">
+      <div class="modal-header">
+        <h3>✨ Personalize This Birthday Page</h3>
+        <button class="close-modal-btn" onclick="closeModal()">&times;</button>
+      </div>
+
+      <div class="modal-body">
+        <div class="form-group">
+          <label>Recipient Name</label>
+          <input type="text" id="inputName" placeholder="e.g. Alex / My Best Friend" value="Someone Truly Special">
+        </div>
+
+        <div class="form-group">
+          <label>Poetic Intro Quote</label>
+          <textarea id="inputQuote" rows="4">"Tonight isn't ordinary.
+The stars are glowing softer,
+the moon feels warmer,
+and the universe is quietly celebrating
+someone truly special. ✨"</textarea>
+        </div>
+
+        <div class="form-group">
+          <label>Background Photo Brightness</label>
+          <div style="display:flex; align-items:center; gap: 12px;">
+            <input type="range" id="bgOpacitySlider" min="20" max="90" value="55" oninput="adjustBgBrightness(this.value)" style="flex:1;">
+            <span id="bgOpacityVal" style="font-size:0.85rem; color:var(--accent-amber); min-width:35px;">55%</span>
+          </div>
+          <span class="file-hint">Adjust background image visibility across all slides</span>
+        </div>
+
+        <div class="form-group">
+          <label>Upload or Change Photo</label>
+          <div class="file-input-wrapper">
+            <input type="file" id="inputPhoto" accept="image/*" onchange="handlePhotoUpload(event)">
+            <span class="file-hint">Select a photo from your device to replace the portrait</span>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>Birthday Letter Message</label>
+          <textarea id="inputLetter" rows="4">On this beautiful day, take a quiet moment to look back at how far you've come and smile at the incredible person you are.
+
+You have a spirit that touches lives, a passion that inspires, and a heart of pure gold. May the coming year bring you unmatched joy, vibrant health, thriving success, and peace in every step you take.</textarea>
+        </div>
+
+        <div class="form-group">
+          <label>Signature (From)</label>
+          <input type="text" id="inputSignature" placeholder="e.g. Always Cheering for You ✨" value="Manopriya✨">
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button class="glass-pill-btn" onclick="resetToDefaults()">Reset to Original</button>
+        <button class="glow-action-btn" onclick="savePersonalization()">Save Changes</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
