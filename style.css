@@ -38,6 +38,36 @@ html, body {
   user-select: none;
 }
 
+/* ==================== GLOBAL LUXURY COSMIC SCROLLBARS ==================== */
+/* Custom scrollbar for WebKit browsers (Chrome, Edge, Safari, Opera) */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgba(12, 4, 24, 0.7);
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, var(--accent-purple) 0%, var(--accent-magenta) 100%);
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 0 0 10px rgba(168, 85, 247, 0.5);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(180deg, var(--accent-magenta) 0%, var(--accent-gold) 100%);
+  box-shadow: 0 0 15px rgba(236, 72, 153, 0.8);
+}
+
+/* Custom scrollbar for Firefox */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--accent-purple) rgba(12, 4, 24, 0.7);
+}
+
 /* ==================== FIXED BACKGROUND PHOTO LAYER ==================== */
 .fixed-bg-photo {
   position: fixed;
@@ -57,13 +87,13 @@ html, body {
   width: 100%;
   height: 100%;
   background-size: cover;
-  background-position: center 20%;
+  background-position: center center;
   background-repeat: no-repeat;
-  background-attachment: fixed;
-  opacity: 0.6;
-  filter: contrast(1.08) saturate(1.1);
-  transition: opacity 0.5s ease, filter 0.5s ease, transform 0.5s ease;
-  transform: scale(1.02);
+  opacity: 0.70;
+  filter: contrast(1.06) saturate(1.08) brightness(0.98);
+  transition: opacity 0.6s ease, filter 0.6s ease, transform 0.6s ease;
+  transform: scale(1.01);
+  will-change: opacity, transform;
 }
 
 .bg-photo-overlay {
@@ -72,14 +102,26 @@ html, body {
   left: 0;
   width: 100%;
   height: 100%;
-  background: radial-gradient(circle at 50% 30%, rgba(18, 6, 38, 0.35) 0%, rgba(9, 3, 18, 0.72) 65%, rgba(7, 2, 16, 0.94) 100%);
+  background: radial-gradient(circle at 50% 38%, rgba(18, 6, 38, 0.18) 0%, rgba(9, 3, 18, 0.55) 60%, rgba(7, 2, 16, 0.90) 100%);
   pointer-events: none;
+  transition: background 0.6s ease;
 }
 
 /* Fullscreen Background Mode adjustments */
 body.fullscreen-bg-mode .bg-photo-img {
-  opacity: 0.82;
-  filter: contrast(1.15) brightness(0.92);
+  opacity: 0.96;
+  filter: contrast(1.1) brightness(1.02);
+  transform: scale(1.02);
+}
+
+body.fullscreen-bg-mode .bg-photo-overlay {
+  background: radial-gradient(circle at 50% 35%, rgba(18, 6, 38, 0.05) 0%, rgba(9, 3, 18, 0.35) 60%, rgba(7, 2, 16, 0.85) 100%);
+}
+
+body.fullscreen-bg-mode #bgStyleToggleBtn {
+  background: rgba(168, 85, 247, 0.35);
+  border-color: rgba(236, 72, 153, 0.6);
+  box-shadow: 0 0 15px rgba(168, 85, 247, 0.4);
 }
 
 body.fullscreen-bg-mode #photoFrame {
@@ -158,12 +200,13 @@ body::after {
   top: 0;
   left: 0;
   width: 100%;
-  padding: 16px 24px;
+  padding: max(12px, env(safe-area-inset-top, 12px)) max(20px, env(safe-area-inset-right, 20px)) 12px max(20px, env(safe-area-inset-left, 20px));
   display: flex;
   justify-content: space-between;
   align-items: center;
   z-index: 50;
-  background: linear-gradient(to bottom, rgba(7, 2, 16, 0.8), transparent);
+  background: linear-gradient(to bottom, rgba(7, 2, 16, 0.88) 0%, rgba(7, 2, 16, 0.4) 70%, transparent 100%);
+  box-sizing: border-box;
 }
 
 .brand-badge {
@@ -173,6 +216,14 @@ body::after {
   text-transform: uppercase;
   color: var(--accent-amber);
   text-shadow: 0 0 10px rgba(245, 158, 11, 0.5);
+  white-space: nowrap;
+}
+
+.nav-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
 }
 
 .glass-pill-btn {
@@ -190,6 +241,7 @@ body::after {
   font-weight: 500;
   cursor: pointer;
   transition: all 0.3s ease;
+  white-space: nowrap;
 }
 
 .glass-pill-btn:hover {
@@ -202,13 +254,13 @@ body::after {
 /* ==================== FLOATING AUDIO CONTROL ==================== */
 .audio-control-pill {
   position: fixed;
-  bottom: 24px;
-  right: 24px;
+  bottom: max(20px, env(safe-area-inset-bottom, 20px));
+  right: max(20px, env(safe-area-inset-right, 20px));
   display: flex;
   align-items: center;
   gap: 10px;
   padding: 8px 14px;
-  background: rgba(26, 11, 48, 0.75);
+  background: rgba(26, 11, 48, 0.82);
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
   border: 1px solid rgba(168, 85, 247, 0.4);
@@ -279,34 +331,103 @@ body::after {
 .audio-control-pill.playing .icon-play { display: none; }
 .audio-control-pill.playing .icon-pause { display: block; }
 
-/* ==================== SLIDE INDICATORS ==================== */
-.slide-indicators {
+/* ==================== COSMIC SCROLLBAR & RAIL ==================== */
+.cosmic-scroll-rail {
   position: fixed;
-  right: 20px;
+  right: max(18px, env(safe-area-inset-right, 18px));
   top: 50%;
   transform: translateY(-50%);
+  height: 240px;
+  width: 24px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 55;
+  user-select: none;
+}
+
+.scroll-track {
+  position: absolute;
+  top: 0;
+  width: 6px;
+  height: 100%;
+  background: rgba(255, 255, 255, 0.12);
+  border: 1px solid rgba(168, 85, 247, 0.35);
+  border-radius: 10px;
+  cursor: pointer;
+  transition: width 0.25s ease, background 0.25s ease, box-shadow 0.25s ease;
+  box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.6), 0 0 10px rgba(168, 85, 247, 0.2);
+}
+
+.cosmic-scroll-rail:hover .scroll-track {
+  width: 8px;
+  background: rgba(255, 255, 255, 0.18);
+  border-color: rgba(236, 72, 153, 0.6);
+  box-shadow: 0 0 15px rgba(168, 85, 247, 0.4);
+}
+
+.scroll-thumb {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 14px;
+  height: 44px;
+  border-radius: 12px;
+  background: linear-gradient(180deg, #ec4899 0%, #a855f7 50%, #f59e0b 100%);
+  border: 2px solid #fff;
+  box-shadow: 0 0 15px rgba(236, 72, 153, 0.8), 0 0 25px rgba(168, 85, 247, 0.6);
+  cursor: grab;
+  transition: top 0.35s cubic-bezier(0.2, 0.8, 0.2, 1), transform 0.2s ease;
+  z-index: 3;
+}
+
+.scroll-thumb:active, .scroll-thumb.dragging {
+  cursor: grabbing;
+  transform: translateX(-50%) scale(1.18);
+  box-shadow: 0 0 22px rgba(245, 158, 11, 0.9), 0 0 35px rgba(236, 72, 153, 0.9);
+  transition: none;
+}
+
+.slide-indicators {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
   display: flex;
   flex-direction: column;
-  gap: 12px;
-  z-index: 50;
+  justify-content: space-between;
+  align-items: center;
+  pointer-events: none;
 }
 
 .indicator-dot {
   width: 8px;
   height: 8px;
   border-radius: 50%;
-  background: rgba(255, 255, 255, 0.3);
+  background: rgba(255, 255, 255, 0.35);
   border: none;
   cursor: pointer;
-  transition: all 0.3s ease;
+  pointer-events: auto;
+  transition: all 0.25s ease;
   padding: 0;
+  position: relative;
+  z-index: 2;
+}
+
+.indicator-dot:hover {
+  transform: scale(1.5);
+  background: #fff;
+  box-shadow: 0 0 12px #fff;
 }
 
 .indicator-dot.active {
-  height: 24px;
-  border-radius: 12px;
-  background: linear-gradient(to bottom, var(--accent-purple), var(--accent-magenta));
-  box-shadow: 0 0 12px var(--accent-purple);
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #fff;
+  box-shadow: 0 0 14px var(--accent-magenta), 0 0 25px var(--accent-gold);
 }
 
 /* ==================== MAIN STORY SLIDES ==================== */
@@ -327,12 +448,15 @@ body::after {
   visibility: hidden;
   display: flex;
   justify-content: center;
-  align-items: center;
-  padding: 20px;
-  transition: opacity 0.8s cubic-bezier(0.4, 0, 0.2, 1), transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
-  transform: translateY(30px) scale(0.96);
+  align-items: flex-start;
+  padding: calc(env(safe-area-inset-top, 0px) + 64px) 16px calc(env(safe-area-inset-bottom, 0px) + 64px);
+  box-sizing: border-box;
+  transition: opacity 0.7s cubic-bezier(0.4, 0, 0.2, 1), transform 0.7s cubic-bezier(0.4, 0, 0.2, 1);
+  transform: translateY(25px) scale(0.97);
   pointer-events: none;
   overflow-y: auto;
+  overflow-x: hidden;
+  -webkit-overflow-scrolling: touch;
 }
 
 .story-slide.active {
@@ -343,7 +467,7 @@ body::after {
 }
 
 .story-slide.previous {
-  transform: translateY(-30px) scale(0.96);
+  transform: translateY(-25px) scale(0.97);
 }
 
 .slide-content {
@@ -355,7 +479,8 @@ body::after {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 20px 0;
+  padding: 10px 0;
+  box-sizing: border-box;
 }
 
 /* ==================== SCENE 1: SCREENSHOT CARD REPLICA ==================== */
@@ -509,10 +634,6 @@ body::after {
 @keyframes gentleBreathe {
   0% { transform: scale(1); text-shadow: 0 2px 14px rgba(0,0,0,0.9), 0 0 22px rgba(245,158,11,0.25); }
   100% { transform: scale(1.018); text-shadow: 0 2px 14px rgba(0,0,0,0.9), 0 0 35px rgba(245,158,11,0.5); }
-}
-  color: #f7eedf;
-  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.8), 0 0 25px rgba(245, 158, 11, 0.3);
-  letter-spacing: 0.3px;
 }
 
 /* Scroll Prompt */
@@ -1330,10 +1451,11 @@ body::after {
   padding: 10px 14px;
   color: #fff;
   font-family: var(--font-sans);
-  font-size: 0.9rem;
+  font-size: 16px; /* Prevents unwanted auto-zoom on iOS Safari */
   outline: none;
   transition: border-color 0.2s;
   width: 100%;
+  box-sizing: border-box;
 }
 
 .form-group input[type="text"]:focus,
@@ -1361,30 +1483,1074 @@ body::after {
   gap: 12px;
 }
 
-/* ==================== RESPONSIVE ADJUSTMENTS ==================== */
-@media (max-width: 480px) {
+/* ==========================================================================
+   STRICT RESPONSIVE SUITE FOR ALL SPECIFIED RESOLUTIONS
+   Supports: 375px, 390px, 414px, 768px, 1024px, 1080px, 1440px, 1920px + Landscape
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   1. ULTRA-WIDE SCREENS: 1920px and above (Full HD / 4K / Large Desktop)
+   -------------------------------------------------------------------------- */
+@media (min-width: 1920px) {
+  .top-nav {
+    max-width: 1720px;
+    margin: 0 auto;
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 24px 48px;
+  }
+
+  .slide-content {
+    max-width: 720px;
+    padding: 20px 0;
+  }
+
   .glowing-frame-wrapper {
-    width: 220px;
+    width: 290px;
   }
 
   .quote-text {
-    font-size: 1.15rem;
-    line-height: 1.5;
+    font-size: 1.55rem;
+    line-height: 1.75;
   }
 
   .scene-title {
-    font-size: 1.8rem;
+    font-size: 2.5rem;
+  }
+
+  .cards-grid {
+    max-width: 580px;
+    gap: 16px;
+  }
+
+  .card-header {
+    padding: 18px 24px;
+  }
+
+  .card-title-group h3 {
+    font-size: 1.18rem;
+  }
+
+  .card-content-inner p {
+    font-size: 1.12rem;
+    line-height: 1.7;
   }
 
   .cake-stage {
-    transform: scale(0.9);
+    transform: scale(1.15);
+    margin: 25px auto;
+  }
+
+  .parchment-letter {
+    max-width: 600px;
+    padding: 32px 38px;
+  }
+
+  .letter-body {
+    font-size: 1.25rem;
+    line-height: 1.8;
+  }
+
+  .grand-birthday-title {
+    font-size: 4.4rem;
+    letter-spacing: 3px;
+  }
+
+  .grand-birthday-name {
+    font-size: 2.1rem;
+  }
+
+  .bg-photo-img {
+    background-position: center center;
+  }
+
+  body.fullscreen-bg-mode .poetic-text-block {
+    max-width: 540px;
+    padding: 28px 34px;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   2. DESKTOP / MACBOOK: 1440px (1201px to 1919px)
+   -------------------------------------------------------------------------- */
+@media (min-width: 1440px) and (max-width: 1919px) {
+  .top-nav {
+    max-width: 1380px;
+    margin: 0 auto;
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 20px 36px;
+  }
+
+  .slide-content {
+    max-width: 640px;
+  }
+
+  .glowing-frame-wrapper {
+    width: 270px;
+  }
+
+  .quote-text {
+    font-size: 1.45rem;
+    line-height: 1.68;
+  }
+
+  .cards-grid {
+    max-width: 520px;
+    gap: 15px;
+  }
+
+  .parchment-letter {
+    max-width: 540px;
+    padding: 28px 32px;
+  }
+
+  .grand-birthday-title {
+    font-size: 3.8rem;
+  }
+
+  .bg-photo-img {
+    background-position: center 22%;
+  }
+
+  body.fullscreen-bg-mode .poetic-text-block {
+    max-width: 500px;
+    padding: 24px 30px;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   3. COMPACT DESKTOP / BREAKPOINT: 1080px (1025px to 1439px)
+   -------------------------------------------------------------------------- */
+@media (min-width: 1025px) and (max-width: 1439px) {
+  .top-nav {
+    padding: 16px 28px;
+  }
+
+  .slide-content {
+    max-width: 580px;
+  }
+
+  .glowing-frame-wrapper {
+    width: 255px;
+  }
+
+  .quote-text {
+    font-size: 1.38rem;
+    line-height: 1.65;
+  }
+
+  .cards-grid {
+    max-width: 480px;
+    gap: 14px;
+  }
+
+  .grand-birthday-title {
+    font-size: 3.4rem;
+  }
+
+  .bg-photo-img {
+    background-position: center 18%;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   4. IPAD PRO / TABLETS LANDSCAPE: 1024px (769px to 1024px)
+   -------------------------------------------------------------------------- */
+@media (min-width: 769px) and (max-width: 1024px) {
+  .top-nav {
+    padding: 16px 24px;
+  }
+
+  .slide-content {
+    max-width: 540px;
+  }
+
+  .glowing-frame-wrapper {
+    width: 245px;
+  }
+
+  .quote-text {
+    font-size: 1.32rem;
+    line-height: 1.6;
+  }
+
+  .cards-grid {
+    max-width: 460px;
+  }
+
+  .grand-birthday-title {
+    font-size: 3.1rem;
+  }
+
+  .bg-photo-img {
+    background-position: center 15%;
+  }
+
+  body.fullscreen-bg-mode .card-scene {
+    justify-content: flex-end;
+    padding-bottom: 55px;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   5. TABLETS PORTRAIT: 768px (431px to 768px)
+   -------------------------------------------------------------------------- */
+@media (min-width: 431px) and (max-width: 768px) {
+  .top-nav {
+    padding: max(12px, env(safe-area-inset-top, 12px)) 20px 10px 20px;
+  }
+
+  .slide-content {
+    max-width: 480px;
+  }
+
+  .glowing-frame-wrapper {
+    width: 230px;
+  }
+
+  .quote-text {
+    font-size: 1.25rem;
+    line-height: 1.55;
+  }
+
+  .cards-grid {
+    max-width: 430px;
+    gap: 12px;
+  }
+
+  .parchment-letter {
+    max-width: 480px;
+    padding: 22px 26px;
+  }
+
+  .grand-birthday-title {
+    font-size: 2.65rem;
+  }
+
+  .bg-photo-img {
+    background-position: center 11%;
+  }
+
+  body.fullscreen-bg-mode .card-scene {
+    justify-content: flex-end;
+    padding-bottom: 50px;
+    min-height: 85vh;
+  }
+
+  body.fullscreen-bg-mode .poetic-text-block {
+    padding: 18px 22px;
+    max-width: 90%;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   6. PHABLETS & LARGE PHONES: 414px (396px to 430px, e.g. iPhone Plus / Max)
+   -------------------------------------------------------------------------- */
+@media (max-width: 430px) {
+  .top-nav {
+    padding: max(12px, env(safe-area-inset-top, 12px)) 16px 8px 16px;
+  }
+
+  .brand-badge {
+    font-size: 0.85rem;
+    letter-spacing: 1.2px;
+  }
+
+  .glass-pill-btn {
+    padding: 6px 12px;
+    font-size: 0.78rem;
+    gap: 5px;
+  }
+
+  .slide-content {
+    max-width: 390px;
+    padding: 8px 0;
+  }
+
+  .glowing-frame-wrapper {
+    width: 215px;
+    border-radius: 28px;
+  }
+
+  .frame-inner {
+    border-radius: 24px;
+  }
+
+  .quote-text {
+    font-size: 1.18rem;
+    line-height: 1.52;
+  }
+
+  .scene-title {
+    font-size: 1.75rem;
+  }
+
+  .scene-subtitle {
+    font-size: 0.88rem;
+    line-height: 1.4;
+    margin-bottom: 14px;
+  }
+
+  .cards-grid {
+    max-width: 375px;
+    gap: 12px;
+  }
+
+  .card-header {
+    padding: 13px 16px;
+    gap: 11px;
+  }
+
+  .card-icon {
+    width: 42px;
+    height: 42px;
+    font-size: 1.4rem;
+  }
+
+  .card-title-group h3 {
+    font-size: 1rem;
+  }
+
+  .card-content-inner p {
+    font-size: 0.98rem;
+    line-height: 1.55;
+  }
+
+  .cake-stage {
+    transform: scale(0.88);
+    height: 180px;
     margin: 5px auto;
   }
 
+  .cake-controls {
+    margin-top: 10px;
+    gap: 12px;
+  }
+
+  .glow-action-btn {
+    padding: 11px 22px;
+    font-size: 0.92rem;
+  }
+
+  .wish-reveal-message {
+    font-size: 0.96rem;
+  }
+
+  .gift-box {
+    width: 102px;
+    height: 102px;
+  }
+
+  .gift-lid {
+    width: 112px;
+    height: 26px;
+  }
+
+  .gift-body {
+    width: 102px;
+    height: 84px;
+  }
+
+  .parchment-letter {
+    padding: 18px 22px;
+    border-radius: 18px;
+  }
+
+  .letter-badge {
+    font-size: 1.15rem;
+  }
+
+  .letter-body {
+    font-size: 1.02rem;
+    line-height: 1.6;
+  }
+
+  .finale-crown {
+    font-size: 2.7rem;
+  }
+
+  .grand-birthday-title {
+    font-size: 2.2rem;
+    letter-spacing: 1.5px;
+  }
+
+  .grand-birthday-name {
+    font-size: 1.35rem;
+  }
+
+  .finale-desc {
+    font-size: 0.9rem;
+  }
+
+  .finale-actions {
+    flex-direction: column;
+    width: 100%;
+    max-width: 280px;
+    gap: 10px;
+  }
+
+  .finale-btn {
+    width: 100%;
+    justify-content: center;
+    padding: 11px 18px;
+    font-size: 0.88rem;
+  }
+
   .audio-control-pill {
-    bottom: 16px;
-    right: 16px;
+    bottom: max(14px, env(safe-area-inset-bottom, 14px));
+    right: max(14px, env(safe-area-inset-right, 14px));
+    padding: 6px 10px;
+  }
+
+  .music-label {
+    display: none;
+  }
+
+  .cosmic-scroll-rail {
+    right: max(10px, env(safe-area-inset-right, 10px));
+    height: 200px;
+  }
+
+  .scroll-thumb {
+    width: 12px;
+    height: 38px;
+  }
+
+  .indicator-dot {
+    width: 6px;
+    height: 6px;
+  }
+
+  .indicator-dot.active {
+    width: 8px;
+    height: 8px;
+  }
+
+  .bg-photo-img {
+    background-position: center 9%;
+  }
+
+  body.fullscreen-bg-mode .card-scene {
+    justify-content: flex-end;
+    padding-bottom: 45px;
+    min-height: 85vh;
+  }
+
+  body.fullscreen-bg-mode .poetic-text-block {
+    padding: 16px 20px;
+    max-width: 92%;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   7. STANDARD SMARTPHONES: 390px (376px to 395px, e.g. iPhone 12/13/14/15/16)
+   -------------------------------------------------------------------------- */
+@media (max-width: 395px) {
+  .top-nav {
+    padding: max(10px, env(safe-area-inset-top, 10px)) 12px 8px 12px;
+  }
+
+  .brand-badge {
+    font-size: 0.8rem;
+    letter-spacing: 1px;
+  }
+
+  .glass-pill-btn {
+    padding: 6px 10px;
+    font-size: 0.74rem;
+    gap: 4px;
+  }
+
+  .glass-pill-btn svg {
+    width: 14px;
+    height: 14px;
+  }
+
+  .slide-content {
+    max-width: 355px;
+  }
+
+  .glowing-frame-wrapper {
+    width: 195px;
+    border-radius: 26px;
+  }
+
+  .quote-text {
+    font-size: 1.12rem;
+    line-height: 1.48;
+  }
+
+  .scene-title {
+    font-size: 1.65rem;
+  }
+
+  .scene-subtitle {
+    font-size: 0.84rem;
+    line-height: 1.38;
+    margin-bottom: 12px;
+  }
+
+  .cards-grid {
+    max-width: 350px;
+    gap: 10px;
+  }
+
+  .card-header {
+    padding: 12px 14px;
+    gap: 10px;
+  }
+
+  .card-icon {
+    width: 40px;
+    height: 40px;
+    font-size: 1.35rem;
+    border-radius: 12px;
+  }
+
+  .card-title-group h3 {
+    font-size: 0.95rem;
+  }
+
+  .card-mini-hint {
+    font-size: 0.68rem;
+  }
+
+  .tap-hint {
+    font-size: 0.72rem;
+    padding: 5px 9px;
+  }
+
+  .card-content-inner p {
+    font-size: 0.94rem;
+    line-height: 1.5;
+  }
+
+  .cake-stage {
+    transform: scale(0.82);
+    height: 170px;
+    margin: 0 auto;
+  }
+
+  .cake-controls {
+    margin-top: 8px;
+    gap: 10px;
+  }
+
+  .glow-action-btn {
+    padding: 10px 20px;
+    font-size: 0.88rem;
+  }
+
+  .wish-reveal-message {
+    font-size: 0.92rem;
+    line-height: 1.4;
+  }
+
+  .gift-box {
+    width: 96px;
+    height: 96px;
+  }
+
+  .gift-lid {
+    width: 106px;
+    height: 25px;
+  }
+
+  .gift-body {
+    width: 96px;
+    height: 78px;
+  }
+
+  .parchment-letter {
+    padding: 16px 18px;
+    border-radius: 16px;
+  }
+
+  .letter-badge {
+    font-size: 1.08rem;
+  }
+
+  .letter-body {
+    font-size: 0.98rem;
+    line-height: 1.55;
+  }
+
+  .letter-body p {
+    margin-bottom: 11px;
+  }
+
+  .finale-crown {
+    font-size: 2.5rem;
+  }
+
+  .grand-birthday-title {
+    font-size: 1.95rem;
+    letter-spacing: 1px;
+  }
+
+  .grand-birthday-name {
+    font-size: 1.25rem;
+  }
+
+  .finale-desc {
+    font-size: 0.86rem;
+    line-height: 1.42;
+  }
+
+  .finale-actions {
+    flex-direction: column;
+    width: 100%;
+    max-width: 260px;
+    gap: 8px;
+  }
+
+  .finale-btn {
+    width: 100%;
+    justify-content: center;
+    padding: 10px 16px;
+    font-size: 0.85rem;
+  }
+
+  .finale-tip {
+    font-size: 0.78rem;
+    padding: 8px 16px;
+    margin-top: 18px;
+  }
+
+  .audio-control-pill {
+    bottom: max(12px, env(safe-area-inset-bottom, 12px));
+    right: max(12px, env(safe-area-inset-right, 12px));
+    padding: 5px 9px;
+  }
+
+  .cosmic-scroll-rail {
+    right: max(8px, env(safe-area-inset-right, 8px));
+    height: 180px;
+    width: 20px;
+  }
+
+  .scroll-thumb {
+    width: 11px;
+    height: 34px;
+  }
+
+  .indicator-dot {
+    width: 5px;
+    height: 5px;
+  }
+
+  .indicator-dot.active {
+    width: 7px;
+    height: 7px;
+  }
+
+  .bg-photo-img {
+    background-position: center 8%;
+  }
+
+  body.fullscreen-bg-mode .card-scene {
+    justify-content: flex-end;
+    padding-bottom: 40px;
+  }
+
+  body.fullscreen-bg-mode .poetic-text-block {
+    padding: 15px 18px;
+    max-width: 92%;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   8. COMPACT SMARTPHONES: 375px and below (e.g. iPhone SE 2/3, Mini, small Android)
+   -------------------------------------------------------------------------- */
+@media (max-width: 375px) {
+  .top-nav {
+    padding: max(8px, env(safe-area-inset-top, 8px)) 10px 6px 10px;
+  }
+
+  .brand-badge {
+    font-size: 0.74rem;
+    letter-spacing: 0.6px;
+  }
+
+  .nav-actions {
+    gap: 5px;
+  }
+
+  .glass-pill-btn {
+    padding: 5px 8px;
+    font-size: 0.7rem;
+    gap: 3px;
+  }
+
+  .glass-pill-btn svg {
+    width: 13px;
+    height: 13px;
+  }
+
+  .story-slide {
+    padding: calc(env(safe-area-inset-top, 0px) + 52px) 10px calc(env(safe-area-inset-bottom, 0px) + 52px);
+  }
+
+  .slide-content {
+    max-width: 335px;
+    padding: 4px 0;
+  }
+
+  .glowing-frame-wrapper {
+    width: 175px;
+    border-radius: 22px;
+    box-shadow: 0 0 25px rgba(168, 85, 247, 0.45), 0 0 50px rgba(147, 51, 234, 0.25);
+  }
+
+  .frame-inner {
+    border-radius: 19px;
+  }
+
+  .frame-sparkle {
+    font-size: 1.1rem;
+  }
+
+  .quote-text {
+    font-size: 1.05rem;
+    line-height: 1.44;
+    letter-spacing: 0.2px;
+  }
+
+  .poetic-text-block {
+    padding: 0 6px;
+  }
+
+  .scroll-prompt {
+    margin-top: 6px;
+    gap: 4px;
+  }
+
+  .scroll-text {
+    font-size: 0.74rem;
+  }
+
+  .scene-tag {
+    font-size: 0.68rem;
+    letter-spacing: 2px;
+    margin-bottom: 5px;
+  }
+
+  .scene-title {
+    font-size: 1.48rem;
+    margin-bottom: 4px;
+  }
+
+  .scene-subtitle {
+    font-size: 0.8rem;
+    line-height: 1.34;
+    margin-bottom: 10px;
+  }
+
+  .cards-grid {
+    max-width: 330px;
+    gap: 8px;
+  }
+
+  .card-header {
+    padding: 10px 12px;
+    gap: 8px;
+  }
+
+  .card-icon {
+    width: 36px;
+    height: 36px;
+    font-size: 1.25rem;
+    border-radius: 10px;
+  }
+
+  .card-title-group h3 {
+    font-size: 0.88rem;
+  }
+
+  .card-mini-hint {
+    font-size: 0.64rem;
+  }
+
+  .tap-hint {
+    font-size: 0.68rem;
+    padding: 4px 7px;
+    gap: 3px;
+  }
+
+  .card-content-inner {
+    padding: 0 12px 12px 12px;
+  }
+
+  .card-content-inner p {
+    font-size: 0.9rem;
+    line-height: 1.45;
+  }
+
+  .slide-nav-buttons {
+    margin-top: 12px;
+    gap: 8px;
+  }
+
+  .nav-btn {
+    padding: 7px 14px;
+    font-size: 0.78rem;
+  }
+
+  .cake-stage {
+    transform: scale(0.74);
+    height: 155px;
+    margin: 0 auto;
+  }
+
+  .cake-controls {
+    margin-top: 6px;
+    gap: 8px;
+  }
+
+  .glow-action-btn {
+    padding: 9px 18px;
+    font-size: 0.84rem;
+  }
+
+  .wish-reveal-message {
+    font-size: 0.85rem;
+    line-height: 1.36;
+  }
+
+  .gift-box {
+    width: 88px;
+    height: 88px;
+  }
+
+  .gift-lid {
+    width: 98px;
+    height: 23px;
+  }
+
+  .gift-body {
+    width: 88px;
+    height: 72px;
+  }
+
+  .gift-hint {
+    margin-top: 10px;
+    font-size: 0.78rem;
+  }
+
+  .parchment-letter {
+    padding: 12px 14px;
+    border-radius: 14px;
+  }
+
+  .letter-badge {
+    font-size: 0.98rem;
+  }
+
+  .letter-date {
+    font-size: 0.72rem;
+  }
+
+  .letter-body {
+    font-size: 0.9rem;
+    line-height: 1.45;
+  }
+
+  .letter-body p {
+    margin-bottom: 9px;
+  }
+
+  .letter-signature strong {
+    font-size: 1.05rem;
+  }
+
+  .finale-crown {
+    font-size: 2.2rem;
+  }
+
+  .grand-birthday-title {
+    font-size: 1.65rem;
+    letter-spacing: 0.8px;
+  }
+
+  .grand-birthday-name {
+    font-size: 1.12rem;
+  }
+
+  .finale-desc {
+    font-size: 0.82rem;
+    line-height: 1.38;
+    margin: 6px 0;
+  }
+
+  .finale-actions {
+    flex-direction: column;
+    width: 100%;
+    max-width: 240px;
+    gap: 7px;
+    margin-top: 10px;
+  }
+
+  .finale-btn {
+    width: 100%;
+    justify-content: center;
+    padding: 9px 14px;
+    font-size: 0.8rem;
+  }
+
+  .finale-tip {
+    font-size: 0.74rem;
     padding: 6px 12px;
+    margin-top: 14px;
+  }
+
+  .audio-control-pill {
+    bottom: max(10px, env(safe-area-inset-bottom, 10px));
+    right: max(10px, env(safe-area-inset-right, 10px));
+    padding: 5px 8px;
+    gap: 5px;
+  }
+
+  .music-btn {
+    width: 20px;
+    height: 20px;
+  }
+
+  .music-btn svg {
+    width: 15px;
+    height: 15px;
+  }
+
+  .cosmic-scroll-rail {
+    right: max(6px, env(safe-area-inset-right, 6px));
+    height: 165px;
+    width: 18px;
+  }
+
+  .scroll-thumb {
+    width: 10px;
+    height: 30px;
+  }
+
+  .indicator-dot {
+    width: 5px;
+    height: 5px;
+  }
+
+  .indicator-dot.active {
+    width: 7px;
+    height: 7px;
+  }
+
+  .modal-box {
+    border-radius: 18px;
+    max-height: 90vh;
+  }
+
+  .modal-header {
+    padding: 14px 16px;
+  }
+
+  .modal-header h3 {
+    font-size: 1rem;
+  }
+
+  .modal-body {
+    padding: 14px 16px;
+    gap: 12px;
+  }
+
+  .modal-footer {
+    padding: 12px 16px;
+  }
+
+  .bg-photo-img {
+    background-position: center 8%;
+  }
+
+  body.fullscreen-bg-mode .card-scene {
+    justify-content: flex-end;
+    padding-bottom: 35px;
+  }
+
+  body.fullscreen-bg-mode .poetic-text-block {
+    padding: 14px 16px;
+    border-radius: 18px;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   9. MOBILE LANDSCAPE ORIENTATION (Low-Height Screens: max-height: 520px)
+   -------------------------------------------------------------------------- */
+@media (max-height: 520px) and (orientation: landscape) {
+  .top-nav {
+    padding: 4px 16px;
+  }
+
+  .brand-badge {
+    font-size: 0.75rem;
+  }
+
+  .glass-pill-btn {
+    padding: 4px 10px;
+    font-size: 0.72rem;
+  }
+
+  .story-slide {
+    padding: 45px 16px 45px;
+    align-items: flex-start;
+  }
+
+  .slide-content {
+    padding: 4px 0;
+  }
+
+  .glowing-frame-wrapper {
+    width: 135px;
+  }
+
+  .quote-text {
+    font-size: 0.92rem;
+    line-height: 1.35;
+  }
+
+  .cake-stage {
+    transform: scale(0.62);
+    height: 125px;
+    margin: 0 auto;
+  }
+
+  .gift-box {
+    width: 75px;
+    height: 75px;
+  }
+
+  .parchment-letter {
+    padding: 12px 16px;
+  }
+
+  .letter-body {
+    font-size: 0.9rem;
+    line-height: 1.4;
+  }
+
+  .grand-birthday-title {
+    font-size: 1.6rem;
+  }
+
+  .finale-crown {
+    font-size: 1.8rem;
+  }
+
+  .finale-actions {
+    flex-direction: row;
+    gap: 8px;
+  }
+
+  .audio-control-pill {
+    bottom: 8px;
+    right: 8px;
+    padding: 4px 8px;
   }
 
   .music-label {
@@ -1392,6 +2558,10 @@ body::after {
   }
 
   .slide-indicators {
-    right: 10px;
+    display: none; /* Hide dots in low-height landscape to save screen space */
+  }
+
+  .bg-photo-img {
+    background-position: center 15%;
   }
 }

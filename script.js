@@ -558,25 +558,43 @@ function initNavigationEvents() {
     }
   }, { passive: true });
 
-  // Touch swipe support (mobile friendly)
+  // Touch swipe support (mobile friendly - supports both vertical & horizontal gestures)
   let touchStartY = 0;
   let touchStartX = 0;
   window.addEventListener('touchstart', (e) => {
-    touchStartY = e.touches[0].clientY;
-    touchStartX = e.touches[0].clientX;
+    if (e.touches && e.touches.length > 0) {
+      touchStartY = e.touches[0].clientY;
+      touchStartX = e.touches[0].clientX;
+    }
   }, { passive: true });
 
   window.addEventListener('touchend', (e) => {
     if (document.getElementById('customModal').classList.contains('show')) return;
-    // Don't swipe slide if user tapped or interacted with a card or button
-    if (e.target.closest('.reveal-card') || e.target.closest('button') || e.target.closest('.cake-stage') || e.target.closest('.gift-box-wrapper')) return;
+    // Don't swipe slide if user interacted with a card, button, cake, gift, or form element
+    if (e.target.closest('.reveal-card') || 
+        e.target.closest('button') || 
+        e.target.closest('.cake-stage') || 
+        e.target.closest('.gift-box-wrapper') ||
+        e.target.closest('input') ||
+        e.target.closest('textarea')) return;
+        
+    if (!e.changedTouches || e.changedTouches.length === 0) return;
     const touchEndY = e.changedTouches[0].clientY;
     const touchEndX = e.changedTouches[0].clientX;
     const diffY = touchStartY - touchEndY;
     const diffX = touchStartX - touchEndX;
 
-    if (Math.abs(diffY) > 75 && Math.abs(diffY) > Math.abs(diffX) * 1.5) {
+    // Vertical swipe (up/down)
+    if (Math.abs(diffY) > 55 && Math.abs(diffY) > Math.abs(diffX) * 1.2) {
       if (diffY > 0) {
+        nextSlide();
+      } else {
+        prevSlide();
+      }
+    } 
+    // Horizontal swipe (left/right)
+    else if (Math.abs(diffX) > 55 && Math.abs(diffX) > Math.abs(diffY) * 1.2) {
+      if (diffX > 0) {
         nextSlide();
       } else {
         prevSlide();
@@ -845,11 +863,36 @@ function adjustBgBrightness(val) {
 
 function toggleBackgroundMode() {
   const isFull = document.body.classList.toggle('fullscreen-bg-mode');
+  const modeBtn = document.getElementById('bgStyleToggleBtn');
   const modeText = document.getElementById('bgModeText');
   if (modeText) {
     modeText.innerText = isFull ? 'Fullscreen' : 'Card View';
   }
+  if (modeBtn) {
+    modeBtn.classList.toggle('active', isFull);
+    modeBtn.title = isFull ? 'Switch to Card View' : 'Switch to Fullscreen Background';
+  }
   localStorage.setItem('hbd_bg_mode', isFull ? 'fullscreen' : 'card');
+}
+
+function setPhotoPreset(preset) {
+  const bgImg = document.getElementById('bgPhotoImg');
+  const userPhoto = document.getElementById('userPhoto');
+  if (preset === 'cosmic_bg') {
+    if (bgImg) bgImg.style.backgroundImage = "url('assets/heart_pose_bg.png')";
+    if (userPhoto) userPhoto.src = 'assets/portrait_person.png';
+    localStorage.setItem('hbd_bg_photo', 'assets/heart_pose_bg.png');
+    localStorage.setItem('hbd_user_photo', 'assets/portrait_person.png');
+  } else if (preset === 'heart_both') {
+    if (bgImg) bgImg.style.backgroundImage = "url('assets/heart_pose_bg.png')";
+    if (userPhoto) userPhoto.src = 'assets/heart_pose_cutout.png';
+    localStorage.setItem('hbd_bg_photo', 'assets/heart_pose_bg.png');
+    localStorage.setItem('hbd_user_photo', 'assets/heart_pose_cutout.png');
+  } else if (preset === 'striped_card') {
+    if (userPhoto) userPhoto.src = 'assets/portrait_person.png';
+    localStorage.setItem('hbd_user_photo', 'assets/portrait_person.png');
+  }
+  triggerSparkleAtCenter();
 }
 
 // ==================== PERSONALIZATION MODAL ====================
@@ -929,15 +972,24 @@ function loadSavedPersonalization() {
     document.getElementById('inputQuote').value = savedQuote;
   }
 
+  const savedBg = localStorage.getItem('hbd_bg_photo');
+  const bgImg = document.getElementById('bgPhotoImg');
+  if (bgImg) {
+    if (savedBg && (savedBg.startsWith('data:image') || savedBg.startsWith('assets/'))) {
+      bgImg.style.backgroundImage = `url('${savedBg}')`;
+    } else {
+      bgImg.style.backgroundImage = "url('assets/heart_pose_bg.png')";
+    }
+  }
+
   const savedPhoto = localStorage.getItem('hbd_user_photo');
-  if (savedPhoto && savedPhoto.startsWith('data:image')) {
-    document.getElementById('userPhoto').src = savedPhoto;
-    const bgImg = document.getElementById('bgPhotoImg');
-    if (bgImg) bgImg.style.backgroundImage = `url('${savedPhoto}')`;
-  } else {
-    document.getElementById('userPhoto').src = 'assets/portrait_person.png';
-    const bgImg = document.getElementById('bgPhotoImg');
-    if (bgImg) bgImg.style.backgroundImage = "url('assets/heart_pose_bg.png')";
+  const userPhoto = document.getElementById('userPhoto');
+  if (userPhoto) {
+    if (savedPhoto && (savedPhoto.startsWith('data:image') || savedPhoto.startsWith('assets/'))) {
+      userPhoto.src = savedPhoto;
+    } else {
+      userPhoto.src = 'assets/portrait_person.png';
+    }
   }
 
   const savedLetter = localStorage.getItem('hbd_letter');
@@ -959,13 +1011,20 @@ function loadSavedPersonalization() {
     const slider = document.getElementById('bgOpacitySlider');
     if (slider) slider.value = savedOpacity;
     adjustBgBrightness(savedOpacity);
+  } else {
+    adjustBgBrightness(70);
   }
 
   const savedMode = localStorage.getItem('hbd_bg_mode');
   if (savedMode === 'fullscreen') {
     document.body.classList.add('fullscreen-bg-mode');
+    const modeBtn = document.getElementById('bgStyleToggleBtn');
     const modeText = document.getElementById('bgModeText');
     if (modeText) modeText.innerText = 'Fullscreen';
+    if (modeBtn) {
+      modeBtn.classList.add('active');
+      modeBtn.title = 'Switch to Card View';
+    }
   }
 }
 
@@ -973,28 +1032,35 @@ function resetToDefaults() {
   localStorage.removeItem('hbd_name');
   localStorage.removeItem('hbd_quote');
   localStorage.removeItem('hbd_user_photo');
+  localStorage.removeItem('hbd_bg_photo');
   localStorage.removeItem('hbd_letter');
   localStorage.removeItem('hbd_signature');
   localStorage.removeItem('hbd_bg_opacity');
   localStorage.removeItem('hbd_bg_mode');
 
   document.body.classList.remove('fullscreen-bg-mode');
+  const modeBtn = document.getElementById('bgStyleToggleBtn');
   const modeText = document.getElementById('bgModeText');
   if (modeText) modeText.innerText = 'Card View';
+  if (modeBtn) {
+    modeBtn.classList.remove('active');
+    modeBtn.title = 'Switch to Fullscreen Background';
+  }
 
   const defaultPortrait = 'assets/portrait_person.png';
   const defaultBg = 'assets/heart_pose_bg.png';
-  document.getElementById('userPhoto').src = defaultPortrait;
+  const userPhoto = document.getElementById('userPhoto');
+  if (userPhoto) userPhoto.src = defaultPortrait;
   const bgImg = document.getElementById('bgPhotoImg');
   if (bgImg) {
     bgImg.style.backgroundImage = `url('${defaultBg}')`;
-    bgImg.style.opacity = '0.55';
+    bgImg.style.opacity = '0.70';
   }
 
   const slider = document.getElementById('bgOpacitySlider');
-  if (slider) slider.value = '55';
+  if (slider) slider.value = '70';
   const label = document.getElementById('bgOpacityVal');
-  if (label) label.innerText = '55%';
+  if (label) label.innerText = '70%';
 
   document.getElementById('finaleName').innerText = 'To Someone Truly Special ✨';
   document.getElementById('quoteText').innerHTML = `"Tonight isn't ordinary.<br>The stars are glowing softer,<br>the moon feels warmer,<br>and the universe is quietly celebrating<br>someone truly special. ✨"`;
